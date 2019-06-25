@@ -1,0 +1,281 @@
+swagger: "2.0"
+info:
+  description: User Data service for storing and querying user interactions.
+  title: User Data Service
+  contact:
+    email: support@artprocessors.net
+  license:
+    name: Art Processors Pty. Ltd.
+    url: https://www.artprocessors.net/licensing
+  version: 1.0.0
+schemes:
+- http
+host: localhost:8080
+basePath: /
+paths:
+  /userdata/v1/health:
+    get:
+      description: Health check
+      operationId: getHealth
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/HealthResponse'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ApiError'
+            
+  /userdata/v1/interactions/{exhibitID}/{tokenID}:
+    get:
+      description: Get the interaction data for the exhibitID and tokenID
+      operationId: getInteractions
+      produces:
+      - application/json
+      parameters:
+      - name: exhibitID
+        description: The unique and static ID of the exhibit
+        type: string
+        in: path
+        required: true
+      - name: tokenID
+        description: The unique tokenID of the user
+        type: string
+        in: path
+        required: true
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Interaction'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ApiError'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ApiError'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ApiError'
+    post:
+      description: Store the interaction data for the exhibitID and tokenID
+      operationId: postInteractions
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: exhibitID
+        description: The unique and static ID of the exhibit
+        type: string
+        in: path
+        required: true
+      - name: tokenID
+        description: The unique tokenID of the user
+        type: string
+        in: path
+        required: true
+      - name: interactions
+        description: The interaction data
+        schema:
+          properties:
+            interactions:
+              type: array
+              items:
+                $ref: '#/definitions/Interaction' 
+        in: body
+        required: true
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Interaction'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ApiError'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ApiError'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ApiError'
+              
+  /userdata/v1/status/{tokenID}:
+    get:
+      description: Get the status related to the tokenID
+      operationId: getStatusByTokenID
+      produces:
+      - application/json
+      parameters:
+      - name: tokenID
+        description: The unique tokenID of the User
+        type: string
+        in: path
+        required: true
+      - name: limit
+        type: integer
+        format: int32
+        default: 100
+        description: Only return data up to this limit
+        in: query
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserData'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ApiError'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ApiError'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ApiError'
+            
+  /userdata/v1/avatar/{tokenID}:
+    get:
+      description: Get the Avatar associated with the tokenID
+      operationId: getAvatarForTokenID
+      produces:
+      - application/json
+      parameters:
+      - name: tokenID
+        type: string
+        in: path
+        required: true
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Avatar'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ApiError'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ApiError'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ApiError'
+    post:
+      description: Store the Avatar associated with the tokenID
+      operationId: postAvatarForTokenID
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: tokenID
+        type: string
+        in: path
+        required: true
+      - name: avatar
+        schema:
+          $ref: '#/definitions/Avatar'
+        in: body
+        required: true
+      responses:
+        201:
+          description: Accepted
+          schema:
+            $ref: '#/definitions/Avatar'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+definitions:
+  ApiResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      data:
+        type: string
+        format: application/json
+        
+  ApiError:
+    type: object
+    required:
+    - code
+    - message
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: Internal error code
+      message:
+        type: string
+        description: Descriptive message
+        
+  UserData:
+    type: object
+    properties:
+      token_id:
+        type: string
+      creation_timestamp:
+        type: string
+        format: datetime
+      modified_timestamp:
+        type: string
+        format: datetime
+      group_id:
+        type: string
+      is_child:
+        type: boolean
+      interactions:
+        type: array
+        items:
+          $ref: '#/definitions/Interaction'
+
+  Interaction:
+    type: object
+    properties:
+      token_id:
+        type: string
+      interaction:
+        type: string
+        format: application/json
+
+  Avatar:
+    type: object
+    properties:
+      token_id: 
+        type: string
+      definition:
+        type: string
+        format: application/json
+        
+  HealthResponse:
+    type: object
+    required:
+    - status
+    properties:
+      status:
+        type: string
+
