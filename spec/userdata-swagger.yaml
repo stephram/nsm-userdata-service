@@ -9,7 +9,17 @@ info:
     url: https://www.artprocessors.net/licensing
   version: 1.0.0
 schemes:
-- http
+  - http
+securityDefinitions:
+  Basic:
+    type: basic
+  ApiKey:
+    type: apiKey
+    in: header
+    name: api-key
+security:
+  - ApiKey: []
+    Basic: []
 host: localhost:8080
 basePath: /
 paths:
@@ -18,41 +28,116 @@ paths:
       description: Health check
       operationId: getHealth
       produces:
-      - application/json
+        - application/json
       responses:
         200:
           description: OK
           schema:
             $ref: '#/definitions/HealthResponse'
         500:
-          description: Internal Server Error
+          description: Internal server error
           schema:
             $ref: '#/definitions/ApiError'
-            
-  /userdata/v1/interactions/{exhibitID}/{tokenID}:
+
+  /userdata/v1/info:
     get:
-      description: Get the interaction data for the exhibitID and tokenID
+      description: Information
+      operationId: getInfo
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/InfoResponse'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /userdata/v1/user/{tokenId}:
+    get:
+      description: Get the User
+      operationId: getUser
+      produces:
+        - application/json
+      parameters:
+        - name: tokenId
+          type: string
+          description: The unique tokenId (nfcId) of the user
+          in: path
+          required: true
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ApiError'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ApiError'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /userdata/v1/user:
+    post:
+      description: Create or Update the user
+      operationId: postUser
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: user
+          description: The User for the tokenId
+          schema:
+            $ref: '#/definitions/User'
+          in: body
+          required: true
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/User'
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ApiError'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ApiError'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /userdata/v1/console/interactions/{tokenId}:
+    get:
+      description: GetInteractions for tokenId
       operationId: getInteractions
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: exhibitID
-        description: The unique and static ID of the exhibit
-        type: string
-        in: path
-        required: true
-      - name: tokenID
-        description: The unique tokenID of the user
-        type: string
-        in: path
-        required: true
+        - name: tokenId
+          type: string
+          in: path
+          required: true
       responses:
         200:
           description: Ok
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Interaction'
+            $ref: '#/definitions/ConsoleInteractions'
         400:
           description: Invalid request
           schema:
@@ -65,217 +150,217 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/ApiError'
+
+  /userdata/v1/console/interactions:
     post:
-      description: Store the interaction data for the exhibitID and tokenID
-      operationId: postInteractions
+      description: PostInteraction for tokenId
+      operationId: postInteraction
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       parameters:
-      - name: exhibitID
-        description: The unique and static ID of the exhibit
-        type: string
-        in: path
-        required: true
-      - name: tokenID
-        description: The unique tokenID of the user
-        type: string
-        in: path
-        required: true
-      - name: interactions
-        description: The interaction data
-        schema:
-          properties:
-            interactions:
-              type: array
-              items:
-                $ref: '#/definitions/Interaction' 
-        in: body
-        required: true
+        - name: interaction
+          schema:
+            $ref: '#/definitions/ConsoleInteraction'
+          in: body
+          required: true
       responses:
         200:
           description: Ok
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Interaction'
-        400:
-          description: Invalid request
-          schema:
-            $ref: '#/definitions/ApiError'
-        404:
-          description: Not found
-          schema:
-            $ref: '#/definitions/ApiError'
-        500:
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/ApiError'
-              
-  /userdata/v1/status/{tokenID}:
-    get:
-      description: Get the status related to the tokenID
-      operationId: getStatusByTokenID
-      produces:
-      - application/json
-      parameters:
-      - name: tokenID
-        description: The unique tokenID of the User
-        type: string
-        in: path
-        required: true
-      - name: limit
-        type: integer
-        format: int32
-        default: 100
-        description: Only return data up to this limit
-        in: query
-      responses:
-        200:
-          description: Ok
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/UserData'
-        400:
-          description: Invalid request
-          schema:
-            $ref: '#/definitions/ApiError'
-        404:
-          description: Not found
-          schema:
-            $ref: '#/definitions/ApiError'
-        500:
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/ApiError'
-            
-  /userdata/v1/avatar/{tokenID}:
-    get:
-      description: Get the Avatar associated with the tokenID
-      operationId: getAvatarForTokenID
-      produces:
-      - application/json
-      parameters:
-      - name: tokenID
-        type: string
-        in: path
-        required: true
-      responses:
-        200:
-          description: Ok
-          schema:
-            $ref: '#/definitions/Avatar'
-        400:
-          description: Invalid request
-          schema:
-            $ref: '#/definitions/ApiError'
-        404:
-          description: Not found
-          schema:
-            $ref: '#/definitions/ApiError'
-        500:
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/ApiError'
-    post:
-      description: Store the Avatar associated with the tokenID
-      operationId: postAvatarForTokenID
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - name: tokenID
-        type: string
-        in: path
-        required: true
-      - name: avatar
-        schema:
-          $ref: '#/definitions/Avatar'
-        in: body
-        required: true
-      responses:
+            $ref: '#/definitions/ConsoleInteraction'
         201:
-          description: Accepted
+          description: Created
           schema:
-            $ref: '#/definitions/Avatar'
+            $ref: '#/definitions/ConsoleInteraction'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ApiError'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ApiError'
         500:
-          description: Internal Server Error
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+  /userdata/v1/gameon/results/{tokenId}:
+    get:
+      description: Get GameOnResults for tokenId
+      operationId: getGameOnResults
+      produces:
+        - application/json
+      parameters:
+        - name: tokenId
+          type: string
+          in: path
+          required: true
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/GameOnResults'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ApiError'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ApiError'
+        500:
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/ApiError'
+
+    post:
+      description: Post / Update GameOnResults
+      operationId: postGameOnResults
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: tokenId
+          type: string
+          in: path
+          required: true
+        - name: gameOnResults
+          schema:
+            $ref: '#/definitions/GameOnResults'
+          in: body
+          required: true
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/GameOnResults'
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/GameOnResults'
+        400:
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/ApiError'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/ApiError'
+        500:
+          description: Internal server error
           schema:
             $ref: '#/definitions/ApiError'
 
 definitions:
-  ApiResponse:
-    type: object
-    properties:
-      code:
-        type: integer
-        format: int32
-      message:
-        type: string
-      data:
-        type: string
-        format: application/json
-        
   ApiError:
     type: object
-    required:
-    - code
-    - message
     properties:
       code:
         type: integer
-        format: int32
+        format: int
         description: Internal error code
       message:
         type: string
         description: Descriptive message
-        
-  UserData:
-    type: object
-    properties:
-      token_id:
-        type: string
-      creation_timestamp:
-        type: string
-        format: datetime
-      modified_timestamp:
-        type: string
-        format: datetime
-      group_id:
-        type: string
-      is_child:
-        type: boolean
-      interactions:
-        type: array
-        items:
-          $ref: '#/definitions/Interaction'
+    required:
+      - code
+      - message
 
-  Interaction:
+  User:
     type: object
     properties:
-      token_id:
+      tokenId:
+        type: string
+      avatarId:
+        type: string
+      name:
+        type: string
+      groupId:
+        type: string
+      isChild:
+        type: boolean
+    required:
+      - tokenId
+
+  ConsoleInteractions:
+    type: array
+    items:
+      $ref: '#/definitions/ConsoleInteraction'
+
+  ConsoleInteraction:
+    type: object
+    properties:
+      exhibitId:
+        type: string
+      tokenId:
         type: string
       interaction:
         type: string
-        format: application/json
+    required:
+      - exhibitId
+      - tokenId
 
-  Avatar:
+  GameOnResults:
     type: object
     properties:
-      token_id: 
+      baseballPoints:
+        type: number
+      classicCatchVideo:
         type: string
-      definition:
+      cycleDistance:
+        type: number
+      horsePosition:
+        type: number
+      netballPoints:
+        type: number
+      pressureCookerScore:
+        type: number
+      reactionTime:
+        type: number
+      rugbyLeagueGoals:
+        type: number
+      rugbyUnionGoals:
+        type: number
+      soccerGoals:
+        type: number
+      surfingTime:
+        type: number
+      youMakeTheRulesPostcard:
         type: string
-        format: application/json
-        
+      youMakeTheRulesVisited:
+        type: boolean
+
   HealthResponse:
     type: object
     required:
-    - status
+      - status
     properties:
       status:
         type: string
 
+  InfoResponse:
+    type: object
+    properties:
+      name:
+        type: string
+      branchName:
+        type: string
+      buildDate:
+        type: string
+      gitCommit:
+        type: string
+      version:
+        type: string
+      author:
+        type: string
+    required:
+      - name
+      - buildDate
+      - branchName
+      - gitCommit
+      - version
+      - author

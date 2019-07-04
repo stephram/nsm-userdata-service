@@ -25,7 +25,7 @@ type GetInteractionsOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []*models.Interaction `json:"body,omitempty"`
+	Payload models.ConsoleInteractions `json:"body,omitempty"`
 }
 
 // NewGetInteractionsOK creates GetInteractionsOK with default headers values
@@ -35,13 +35,13 @@ func NewGetInteractionsOK() *GetInteractionsOK {
 }
 
 // WithPayload adds the payload to the get interactions o k response
-func (o *GetInteractionsOK) WithPayload(payload []*models.Interaction) *GetInteractionsOK {
+func (o *GetInteractionsOK) WithPayload(payload models.ConsoleInteractions) *GetInteractionsOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get interactions o k response
-func (o *GetInteractionsOK) SetPayload(payload []*models.Interaction) {
+func (o *GetInteractionsOK) SetPayload(payload models.ConsoleInteractions) {
 	o.Payload = payload
 }
 
@@ -52,7 +52,7 @@ func (o *GetInteractionsOK) WriteResponse(rw http.ResponseWriter, producer runti
 	payload := o.Payload
 	if payload == nil {
 		// return empty array
-		payload = make([]*models.Interaction, 0, 50)
+		payload = models.ConsoleInteractions{}
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

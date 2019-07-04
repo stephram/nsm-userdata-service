@@ -37,26 +37,37 @@ func init() {
   "host": "localhost:8080",
   "basePath": "/",
   "paths": {
-    "/userdata/v1/avatar/{tokenID}": {
-      "get": {
-        "description": "Get the Avatar associated with the tokenID",
+    "/userdata/v1/console/interactions": {
+      "post": {
+        "description": "PostInteraction for tokenId",
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "application/json"
         ],
-        "operationId": "getAvatarForTokenID",
+        "operationId": "postInteraction",
         "parameters": [
           {
-            "type": "string",
-            "name": "tokenID",
-            "in": "path",
-            "required": true
+            "name": "interaction",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConsoleInteraction"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Ok",
             "schema": {
-              "$ref": "#/definitions/Avatar"
+              "$ref": "#/definitions/ConsoleInteraction"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ConsoleInteraction"
             }
           },
           "400": {
@@ -72,7 +83,93 @@ func init() {
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/userdata/v1/console/interactions/{tokenId}": {
+      "get": {
+        "description": "GetInteractions for tokenId",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getInteractions",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "tokenId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/ConsoleInteractions"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/userdata/v1/gameon/results/{tokenId}": {
+      "get": {
+        "description": "Get GameOnResults for tokenId",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getGameOnResults",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "tokenId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/GameOnResults"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "schema": {
               "$ref": "#/definitions/ApiError"
             }
@@ -80,39 +177,57 @@ func init() {
         }
       },
       "post": {
-        "description": "Store the Avatar associated with the tokenID",
+        "description": "Post / Update GameOnResults",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "application/json"
         ],
-        "operationId": "postAvatarForTokenID",
+        "operationId": "postGameOnResults",
         "parameters": [
           {
             "type": "string",
-            "name": "tokenID",
+            "name": "tokenId",
             "in": "path",
             "required": true
           },
           {
-            "name": "avatar",
+            "name": "gameOnResults",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Avatar"
+              "$ref": "#/definitions/GameOnResults"
             }
           }
         ],
         "responses": {
-          "201": {
-            "description": "Accepted",
+          "200": {
+            "description": "Ok",
             "schema": {
-              "$ref": "#/definitions/Avatar"
+              "$ref": "#/definitions/GameOnResults"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/GameOnResults"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
             "schema": {
               "$ref": "#/definitions/ApiError"
             }
@@ -135,7 +250,7 @@ func init() {
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
             "schema": {
               "$ref": "#/definitions/ApiError"
             }
@@ -143,49 +258,18 @@ func init() {
         }
       }
     },
-    "/userdata/v1/interactions/{exhibitID}/{tokenID}": {
+    "/userdata/v1/info": {
       "get": {
-        "description": "Get the interaction data for the exhibitID and tokenID",
+        "description": "Information",
         "produces": [
           "application/json"
         ],
-        "operationId": "getInteractions",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "The unique and static ID of the exhibit",
-            "name": "exhibitID",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "The unique tokenID of the user",
-            "name": "tokenID",
-            "in": "path",
-            "required": true
-          }
-        ],
+        "operationId": "getInfo",
         "responses": {
           "200": {
-            "description": "Ok",
+            "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Interaction"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request",
-            "schema": {
-              "$ref": "#/definitions/ApiError"
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "schema": {
-              "$ref": "#/definitions/ApiError"
+              "$ref": "#/definitions/InfoResponse"
             }
           },
           "500": {
@@ -195,45 +279,26 @@ func init() {
             }
           }
         }
-      },
+      }
+    },
+    "/userdata/v1/user": {
       "post": {
-        "description": "Store the interaction data for the exhibitID and tokenID",
+        "description": "Create or Update the user",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "application/json"
         ],
-        "operationId": "postInteractions",
+        "operationId": "postUser",
         "parameters": [
           {
-            "type": "string",
-            "description": "The unique and static ID of the exhibit",
-            "name": "exhibitID",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "The unique tokenID of the user",
-            "name": "tokenID",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "The interaction data",
-            "name": "interactions",
+            "description": "The User for the tokenId",
+            "name": "user",
             "in": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "interactions": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/Interaction"
-                  }
-                }
-              }
+              "$ref": "#/definitions/User"
             }
           }
         ],
@@ -241,10 +306,13 @@ func init() {
           "200": {
             "description": "Ok",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Interaction"
-              }
+              "$ref": "#/definitions/User"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           },
           "400": {
@@ -268,38 +336,27 @@ func init() {
         }
       }
     },
-    "/userdata/v1/status/{tokenID}": {
+    "/userdata/v1/user/{tokenId}": {
       "get": {
-        "description": "Get the status related to the tokenID",
+        "description": "Get the User",
         "produces": [
           "application/json"
         ],
-        "operationId": "getStatusByTokenID",
+        "operationId": "getUser",
         "parameters": [
           {
             "type": "string",
-            "description": "The unique tokenID of the User",
-            "name": "tokenID",
+            "description": "The unique tokenId (nfcId) of the user",
+            "name": "tokenId",
             "in": "path",
             "required": true
-          },
-          {
-            "type": "integer",
-            "format": "int32",
-            "default": 100,
-            "description": "Only return data up to this limit",
-            "name": "limit",
-            "in": "query"
           }
         ],
         "responses": {
           "200": {
             "description": "Ok",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/UserData"
-              }
+              "$ref": "#/definitions/User"
             }
           },
           "400": {
@@ -315,7 +372,7 @@ func init() {
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
             "schema": {
               "$ref": "#/definitions/ApiError"
             }
@@ -335,7 +392,7 @@ func init() {
         "code": {
           "description": "Internal error code",
           "type": "integer",
-          "format": "int32"
+          "format": "int"
         },
         "message": {
           "description": "Descriptive message",
@@ -343,31 +400,71 @@ func init() {
         }
       }
     },
-    "ApiResponse": {
+    "ConsoleInteraction": {
       "type": "object",
+      "required": [
+        "exhibitId",
+        "tokenId"
+      ],
       "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
+        "exhibitId": {
+          "type": "string"
         },
-        "data": {
-          "type": "string",
-          "format": "application/json"
+        "interaction": {
+          "type": "string"
         },
-        "message": {
+        "tokenId": {
           "type": "string"
         }
       }
     },
-    "Avatar": {
+    "ConsoleInteractions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConsoleInteraction"
+      }
+    },
+    "GameOnResults": {
       "type": "object",
       "properties": {
-        "definition": {
-          "type": "string",
-          "format": "application/json"
+        "baseballPoints": {
+          "type": "number"
         },
-        "token_id": {
+        "classicCatchVideo": {
           "type": "string"
+        },
+        "cycleDistance": {
+          "type": "number"
+        },
+        "horsePosition": {
+          "type": "number"
+        },
+        "netballPoints": {
+          "type": "number"
+        },
+        "pressureCookerScore": {
+          "type": "number"
+        },
+        "reactionTime": {
+          "type": "number"
+        },
+        "rugbyLeagueGoals": {
+          "type": "number"
+        },
+        "rugbyUnionGoals": {
+          "type": "number"
+        },
+        "soccerGoals": {
+          "type": "number"
+        },
+        "surfingTime": {
+          "type": "number"
+        },
+        "youMakeTheRulesPostcard": {
+          "type": "string"
+        },
+        "youMakeTheRulesVisited": {
+          "type": "boolean"
         }
       }
     },
@@ -382,47 +479,77 @@ func init() {
         }
       }
     },
-    "Interaction": {
+    "InfoResponse": {
       "type": "object",
+      "required": [
+        "name",
+        "buildDate",
+        "branchName",
+        "gitCommit",
+        "version",
+        "author"
+      ],
       "properties": {
-        "interaction": {
-          "type": "string",
-          "format": "application/json"
+        "author": {
+          "type": "string"
         },
-        "token_id": {
+        "branchName": {
+          "type": "string"
+        },
+        "buildDate": {
+          "type": "string"
+        },
+        "gitCommit": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
           "type": "string"
         }
       }
     },
-    "UserData": {
+    "User": {
       "type": "object",
+      "required": [
+        "tokenId"
+      ],
       "properties": {
-        "creation_timestamp": {
-          "type": "string",
-          "format": "datetime"
-        },
-        "group_id": {
+        "avatarId": {
           "type": "string"
         },
-        "interactions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Interaction"
-          }
+        "groupId": {
+          "type": "string"
         },
-        "is_child": {
+        "isChild": {
           "type": "boolean"
         },
-        "modified_timestamp": {
-          "type": "string",
-          "format": "datetime"
+        "name": {
+          "type": "string"
         },
-        "token_id": {
+        "tokenId": {
           "type": "string"
         }
       }
     }
-  }
+  },
+  "securityDefinitions": {
+    "ApiKey": {
+      "type": "apiKey",
+      "name": "api-key",
+      "in": "header"
+    },
+    "Basic": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKey": null,
+      "Basic": null
+    }
+  ]
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
   "schemes": [
@@ -444,26 +571,37 @@ func init() {
   "host": "localhost:8080",
   "basePath": "/",
   "paths": {
-    "/userdata/v1/avatar/{tokenID}": {
-      "get": {
-        "description": "Get the Avatar associated with the tokenID",
+    "/userdata/v1/console/interactions": {
+      "post": {
+        "description": "PostInteraction for tokenId",
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "application/json"
         ],
-        "operationId": "getAvatarForTokenID",
+        "operationId": "postInteraction",
         "parameters": [
           {
-            "type": "string",
-            "name": "tokenID",
-            "in": "path",
-            "required": true
+            "name": "interaction",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConsoleInteraction"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Ok",
             "schema": {
-              "$ref": "#/definitions/Avatar"
+              "$ref": "#/definitions/ConsoleInteraction"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ConsoleInteraction"
             }
           },
           "400": {
@@ -479,7 +617,93 @@ func init() {
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/userdata/v1/console/interactions/{tokenId}": {
+      "get": {
+        "description": "GetInteractions for tokenId",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getInteractions",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "tokenId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/ConsoleInteractions"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/userdata/v1/gameon/results/{tokenId}": {
+      "get": {
+        "description": "Get GameOnResults for tokenId",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getGameOnResults",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "tokenId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/GameOnResults"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
             "schema": {
               "$ref": "#/definitions/ApiError"
             }
@@ -487,39 +711,57 @@ func init() {
         }
       },
       "post": {
-        "description": "Store the Avatar associated with the tokenID",
+        "description": "Post / Update GameOnResults",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "application/json"
         ],
-        "operationId": "postAvatarForTokenID",
+        "operationId": "postGameOnResults",
         "parameters": [
           {
             "type": "string",
-            "name": "tokenID",
+            "name": "tokenId",
             "in": "path",
             "required": true
           },
           {
-            "name": "avatar",
+            "name": "gameOnResults",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Avatar"
+              "$ref": "#/definitions/GameOnResults"
             }
           }
         ],
         "responses": {
-          "201": {
-            "description": "Accepted",
+          "200": {
+            "description": "Ok",
             "schema": {
-              "$ref": "#/definitions/Avatar"
+              "$ref": "#/definitions/GameOnResults"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/GameOnResults"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
             "schema": {
               "$ref": "#/definitions/ApiError"
             }
@@ -542,7 +784,7 @@ func init() {
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
             "schema": {
               "$ref": "#/definitions/ApiError"
             }
@@ -550,49 +792,18 @@ func init() {
         }
       }
     },
-    "/userdata/v1/interactions/{exhibitID}/{tokenID}": {
+    "/userdata/v1/info": {
       "get": {
-        "description": "Get the interaction data for the exhibitID and tokenID",
+        "description": "Information",
         "produces": [
           "application/json"
         ],
-        "operationId": "getInteractions",
-        "parameters": [
-          {
-            "type": "string",
-            "description": "The unique and static ID of the exhibit",
-            "name": "exhibitID",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "The unique tokenID of the user",
-            "name": "tokenID",
-            "in": "path",
-            "required": true
-          }
-        ],
+        "operationId": "getInfo",
         "responses": {
           "200": {
-            "description": "Ok",
+            "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Interaction"
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request",
-            "schema": {
-              "$ref": "#/definitions/ApiError"
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "schema": {
-              "$ref": "#/definitions/ApiError"
+              "$ref": "#/definitions/InfoResponse"
             }
           },
           "500": {
@@ -602,45 +813,26 @@ func init() {
             }
           }
         }
-      },
+      }
+    },
+    "/userdata/v1/user": {
       "post": {
-        "description": "Store the interaction data for the exhibitID and tokenID",
+        "description": "Create or Update the user",
         "consumes": [
           "application/json"
         ],
         "produces": [
           "application/json"
         ],
-        "operationId": "postInteractions",
+        "operationId": "postUser",
         "parameters": [
           {
-            "type": "string",
-            "description": "The unique and static ID of the exhibit",
-            "name": "exhibitID",
-            "in": "path",
-            "required": true
-          },
-          {
-            "type": "string",
-            "description": "The unique tokenID of the user",
-            "name": "tokenID",
-            "in": "path",
-            "required": true
-          },
-          {
-            "description": "The interaction data",
-            "name": "interactions",
+            "description": "The User for the tokenId",
+            "name": "user",
             "in": "body",
             "required": true,
             "schema": {
-              "properties": {
-                "interactions": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/Interaction"
-                  }
-                }
-              }
+              "$ref": "#/definitions/User"
             }
           }
         ],
@@ -648,10 +840,13 @@ func init() {
           "200": {
             "description": "Ok",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Interaction"
-              }
+              "$ref": "#/definitions/User"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/User"
             }
           },
           "400": {
@@ -675,38 +870,27 @@ func init() {
         }
       }
     },
-    "/userdata/v1/status/{tokenID}": {
+    "/userdata/v1/user/{tokenId}": {
       "get": {
-        "description": "Get the status related to the tokenID",
+        "description": "Get the User",
         "produces": [
           "application/json"
         ],
-        "operationId": "getStatusByTokenID",
+        "operationId": "getUser",
         "parameters": [
           {
             "type": "string",
-            "description": "The unique tokenID of the User",
-            "name": "tokenID",
+            "description": "The unique tokenId (nfcId) of the user",
+            "name": "tokenId",
             "in": "path",
             "required": true
-          },
-          {
-            "type": "integer",
-            "format": "int32",
-            "default": 100,
-            "description": "Only return data up to this limit",
-            "name": "limit",
-            "in": "query"
           }
         ],
         "responses": {
           "200": {
             "description": "Ok",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/UserData"
-              }
+              "$ref": "#/definitions/User"
             }
           },
           "400": {
@@ -722,7 +906,7 @@ func init() {
             }
           },
           "500": {
-            "description": "Internal Server Error",
+            "description": "Internal server error",
             "schema": {
               "$ref": "#/definitions/ApiError"
             }
@@ -742,7 +926,7 @@ func init() {
         "code": {
           "description": "Internal error code",
           "type": "integer",
-          "format": "int32"
+          "format": "int"
         },
         "message": {
           "description": "Descriptive message",
@@ -750,31 +934,71 @@ func init() {
         }
       }
     },
-    "ApiResponse": {
+    "ConsoleInteraction": {
       "type": "object",
+      "required": [
+        "exhibitId",
+        "tokenId"
+      ],
       "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
+        "exhibitId": {
+          "type": "string"
         },
-        "data": {
-          "type": "string",
-          "format": "application/json"
+        "interaction": {
+          "type": "string"
         },
-        "message": {
+        "tokenId": {
           "type": "string"
         }
       }
     },
-    "Avatar": {
+    "ConsoleInteractions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConsoleInteraction"
+      }
+    },
+    "GameOnResults": {
       "type": "object",
       "properties": {
-        "definition": {
-          "type": "string",
-          "format": "application/json"
+        "baseballPoints": {
+          "type": "number"
         },
-        "token_id": {
+        "classicCatchVideo": {
           "type": "string"
+        },
+        "cycleDistance": {
+          "type": "number"
+        },
+        "horsePosition": {
+          "type": "number"
+        },
+        "netballPoints": {
+          "type": "number"
+        },
+        "pressureCookerScore": {
+          "type": "number"
+        },
+        "reactionTime": {
+          "type": "number"
+        },
+        "rugbyLeagueGoals": {
+          "type": "number"
+        },
+        "rugbyUnionGoals": {
+          "type": "number"
+        },
+        "soccerGoals": {
+          "type": "number"
+        },
+        "surfingTime": {
+          "type": "number"
+        },
+        "youMakeTheRulesPostcard": {
+          "type": "string"
+        },
+        "youMakeTheRulesVisited": {
+          "type": "boolean"
         }
       }
     },
@@ -789,46 +1013,76 @@ func init() {
         }
       }
     },
-    "Interaction": {
+    "InfoResponse": {
       "type": "object",
+      "required": [
+        "name",
+        "buildDate",
+        "branchName",
+        "gitCommit",
+        "version",
+        "author"
+      ],
       "properties": {
-        "interaction": {
-          "type": "string",
-          "format": "application/json"
+        "author": {
+          "type": "string"
         },
-        "token_id": {
+        "branchName": {
+          "type": "string"
+        },
+        "buildDate": {
+          "type": "string"
+        },
+        "gitCommit": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
           "type": "string"
         }
       }
     },
-    "UserData": {
+    "User": {
       "type": "object",
+      "required": [
+        "tokenId"
+      ],
       "properties": {
-        "creation_timestamp": {
-          "type": "string",
-          "format": "datetime"
-        },
-        "group_id": {
+        "avatarId": {
           "type": "string"
         },
-        "interactions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Interaction"
-          }
+        "groupId": {
+          "type": "string"
         },
-        "is_child": {
+        "isChild": {
           "type": "boolean"
         },
-        "modified_timestamp": {
-          "type": "string",
-          "format": "datetime"
+        "name": {
+          "type": "string"
         },
-        "token_id": {
+        "tokenId": {
           "type": "string"
         }
       }
     }
-  }
+  },
+  "securityDefinitions": {
+    "ApiKey": {
+      "type": "apiKey",
+      "name": "api-key",
+      "in": "header"
+    },
+    "Basic": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKey": [],
+      "Basic": []
+    }
+  ]
 }`))
 }

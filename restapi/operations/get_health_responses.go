@@ -60,7 +60,7 @@ func (o *GetHealthOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pro
 // GetHealthInternalServerErrorCode is the HTTP code returned for type GetHealthInternalServerError
 const GetHealthInternalServerErrorCode int = 500
 
-/*GetHealthInternalServerError Internal Server Error
+/*GetHealthInternalServerError Internal server error
 
 swagger:response getHealthInternalServerError
 */

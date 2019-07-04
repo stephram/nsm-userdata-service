@@ -19,7 +19,7 @@ type APIError struct {
 
 	// Internal error code
 	// Required: true
-	Code *int32 `json:"code"`
+	Code *int64 `json:"code"`
 
 	// Descriptive message
 	// Required: true

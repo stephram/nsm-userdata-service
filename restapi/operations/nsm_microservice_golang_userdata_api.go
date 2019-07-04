@@ -37,24 +37,42 @@ func NewNsmMicroserviceGolangUserdataAPI(spec *loads.Document) *NsmMicroserviceG
 		BearerAuthenticator: security.BearerAuth,
 		JSONConsumer:        runtime.JSONConsumer(),
 		JSONProducer:        runtime.JSONProducer(),
-		GetAvatarForTokenIDHandler: GetAvatarForTokenIDHandlerFunc(func(params GetAvatarForTokenIDParams) middleware.Responder {
-			return middleware.NotImplemented("operation GetAvatarForTokenID has not yet been implemented")
+		GetGameOnResultsHandler: GetGameOnResultsHandlerFunc(func(params GetGameOnResultsParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation GetGameOnResults has not yet been implemented")
 		}),
-		GetHealthHandler: GetHealthHandlerFunc(func(params GetHealthParams) middleware.Responder {
+		GetHealthHandler: GetHealthHandlerFunc(func(params GetHealthParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation GetHealth has not yet been implemented")
 		}),
-		GetInteractionsHandler: GetInteractionsHandlerFunc(func(params GetInteractionsParams) middleware.Responder {
+		GetInfoHandler: GetInfoHandlerFunc(func(params GetInfoParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation GetInfo has not yet been implemented")
+		}),
+		GetInteractionsHandler: GetInteractionsHandlerFunc(func(params GetInteractionsParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation GetInteractions has not yet been implemented")
 		}),
-		GetStatusByTokenIDHandler: GetStatusByTokenIDHandlerFunc(func(params GetStatusByTokenIDParams) middleware.Responder {
-			return middleware.NotImplemented("operation GetStatusByTokenID has not yet been implemented")
+		GetUserHandler: GetUserHandlerFunc(func(params GetUserParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation GetUser has not yet been implemented")
 		}),
-		PostAvatarForTokenIDHandler: PostAvatarForTokenIDHandlerFunc(func(params PostAvatarForTokenIDParams) middleware.Responder {
-			return middleware.NotImplemented("operation PostAvatarForTokenID has not yet been implemented")
+		PostGameOnResultsHandler: PostGameOnResultsHandlerFunc(func(params PostGameOnResultsParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation PostGameOnResults has not yet been implemented")
 		}),
-		PostInteractionsHandler: PostInteractionsHandlerFunc(func(params PostInteractionsParams) middleware.Responder {
-			return middleware.NotImplemented("operation PostInteractions has not yet been implemented")
+		PostInteractionHandler: PostInteractionHandlerFunc(func(params PostInteractionParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation PostInteraction has not yet been implemented")
 		}),
+		PostUserHandler: PostUserHandlerFunc(func(params PostUserParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation PostUser has not yet been implemented")
+		}),
+
+		// Applies when the "api-key" header is set
+		APIKeyAuth: func(token string) (interface{}, error) {
+			return nil, errors.NotImplemented("api key auth (ApiKey) api-key from header param [api-key] has not yet been implemented")
+		},
+		// Applies when the Authorization header is set with the Basic scheme
+		BasicAuth: func(user string, pass string) (interface{}, error) {
+			return nil, errors.NotImplemented("basic auth  (Basic) has not yet been implemented")
+		},
+
+		// default authorizer is authorized meaning no requests are blocked
+		APIAuthorizer: security.Authorized(),
 	}
 }
 
@@ -86,18 +104,33 @@ type NsmMicroserviceGolangUserdataAPI struct {
 	// JSONProducer registers a producer for a "application/json" mime type
 	JSONProducer runtime.Producer
 
-	// GetAvatarForTokenIDHandler sets the operation handler for the get avatar for token ID operation
-	GetAvatarForTokenIDHandler GetAvatarForTokenIDHandler
+	// APIKeyAuth registers a function that takes a token and returns a principal
+	// it performs authentication based on an api key api-key provided in the header
+	APIKeyAuth func(string) (interface{}, error)
+
+	// BasicAuth registers a function that takes username and password and returns a principal
+	// it performs authentication with basic auth
+	BasicAuth func(string, string) (interface{}, error)
+
+	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
+	APIAuthorizer runtime.Authorizer
+
+	// GetGameOnResultsHandler sets the operation handler for the get game on results operation
+	GetGameOnResultsHandler GetGameOnResultsHandler
 	// GetHealthHandler sets the operation handler for the get health operation
 	GetHealthHandler GetHealthHandler
+	// GetInfoHandler sets the operation handler for the get info operation
+	GetInfoHandler GetInfoHandler
 	// GetInteractionsHandler sets the operation handler for the get interactions operation
 	GetInteractionsHandler GetInteractionsHandler
-	// GetStatusByTokenIDHandler sets the operation handler for the get status by token ID operation
-	GetStatusByTokenIDHandler GetStatusByTokenIDHandler
-	// PostAvatarForTokenIDHandler sets the operation handler for the post avatar for token ID operation
-	PostAvatarForTokenIDHandler PostAvatarForTokenIDHandler
-	// PostInteractionsHandler sets the operation handler for the post interactions operation
-	PostInteractionsHandler PostInteractionsHandler
+	// GetUserHandler sets the operation handler for the get user operation
+	GetUserHandler GetUserHandler
+	// PostGameOnResultsHandler sets the operation handler for the post game on results operation
+	PostGameOnResultsHandler PostGameOnResultsHandler
+	// PostInteractionHandler sets the operation handler for the post interaction operation
+	PostInteractionHandler PostInteractionHandler
+	// PostUserHandler sets the operation handler for the post user operation
+	PostUserHandler PostUserHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -161,28 +194,44 @@ func (o *NsmMicroserviceGolangUserdataAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.GetAvatarForTokenIDHandler == nil {
-		unregistered = append(unregistered, "GetAvatarForTokenIDHandler")
+	if o.APIKeyAuth == nil {
+		unregistered = append(unregistered, "APIKeyAuth")
+	}
+
+	if o.BasicAuth == nil {
+		unregistered = append(unregistered, "BasicAuth")
+	}
+
+	if o.GetGameOnResultsHandler == nil {
+		unregistered = append(unregistered, "GetGameOnResultsHandler")
 	}
 
 	if o.GetHealthHandler == nil {
 		unregistered = append(unregistered, "GetHealthHandler")
 	}
 
+	if o.GetInfoHandler == nil {
+		unregistered = append(unregistered, "GetInfoHandler")
+	}
+
 	if o.GetInteractionsHandler == nil {
 		unregistered = append(unregistered, "GetInteractionsHandler")
 	}
 
-	if o.GetStatusByTokenIDHandler == nil {
-		unregistered = append(unregistered, "GetStatusByTokenIDHandler")
+	if o.GetUserHandler == nil {
+		unregistered = append(unregistered, "GetUserHandler")
 	}
 
-	if o.PostAvatarForTokenIDHandler == nil {
-		unregistered = append(unregistered, "PostAvatarForTokenIDHandler")
+	if o.PostGameOnResultsHandler == nil {
+		unregistered = append(unregistered, "PostGameOnResultsHandler")
 	}
 
-	if o.PostInteractionsHandler == nil {
-		unregistered = append(unregistered, "PostInteractionsHandler")
+	if o.PostInteractionHandler == nil {
+		unregistered = append(unregistered, "PostInteractionHandler")
+	}
+
+	if o.PostUserHandler == nil {
+		unregistered = append(unregistered, "PostUserHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -200,14 +249,28 @@ func (o *NsmMicroserviceGolangUserdataAPI) ServeErrorFor(operationID string) fun
 // AuthenticatorsFor gets the authenticators for the specified security schemes
 func (o *NsmMicroserviceGolangUserdataAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 
-	return nil
+	result := make(map[string]runtime.Authenticator)
+	for name, scheme := range schemes {
+		switch name {
+
+		case "ApiKey":
+
+			result[name] = o.APIKeyAuthenticator(scheme.Name, scheme.In, o.APIKeyAuth)
+
+		case "Basic":
+			_ = scheme
+			result[name] = o.BasicAuthenticator(o.BasicAuth)
+
+		}
+	}
+	return result
 
 }
 
 // Authorizer returns the registered authorizer
 func (o *NsmMicroserviceGolangUserdataAPI) Authorizer() runtime.Authorizer {
 
-	return nil
+	return o.APIAuthorizer
 
 }
 
@@ -286,7 +349,7 @@ func (o *NsmMicroserviceGolangUserdataAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/userdata/v1/avatar/{tokenID}"] = NewGetAvatarForTokenID(o.context, o.GetAvatarForTokenIDHandler)
+	o.handlers["GET"]["/userdata/v1/gameon/results/{tokenId}"] = NewGetGameOnResults(o.context, o.GetGameOnResultsHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
@@ -296,22 +359,32 @@ func (o *NsmMicroserviceGolangUserdataAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/userdata/v1/interactions/{exhibitID}/{tokenID}"] = NewGetInteractions(o.context, o.GetInteractionsHandler)
+	o.handlers["GET"]["/userdata/v1/info"] = NewGetInfo(o.context, o.GetInfoHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/userdata/v1/status/{tokenID}"] = NewGetStatusByTokenID(o.context, o.GetStatusByTokenIDHandler)
+	o.handlers["GET"]["/userdata/v1/console/interactions/{tokenId}"] = NewGetInteractions(o.context, o.GetInteractionsHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/userdata/v1/user/{tokenId}"] = NewGetUser(o.context, o.GetUserHandler)
 
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/userdata/v1/avatar/{tokenID}"] = NewPostAvatarForTokenID(o.context, o.PostAvatarForTokenIDHandler)
+	o.handlers["POST"]["/userdata/v1/gameon/results/{tokenId}"] = NewPostGameOnResults(o.context, o.PostGameOnResultsHandler)
 
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/userdata/v1/interactions/{exhibitID}/{tokenID}"] = NewPostInteractions(o.context, o.PostInteractionsHandler)
+	o.handlers["POST"]["/userdata/v1/console/interactions"] = NewPostInteraction(o.context, o.PostInteractionHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/userdata/v1/user"] = NewPostUser(o.context, o.PostUserHandler)
 
 }
 

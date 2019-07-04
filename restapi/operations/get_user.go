@@ -11,40 +11,40 @@ import (
 	middleware "github.com/go-openapi/runtime/middleware"
 )
 
-// GetHealthHandlerFunc turns a function with the right signature into a get health handler
-type GetHealthHandlerFunc func(GetHealthParams, interface{}) middleware.Responder
+// GetUserHandlerFunc turns a function with the right signature into a get user handler
+type GetUserHandlerFunc func(GetUserParams, interface{}) middleware.Responder
 
 // Handle executing the request and returning a response
-func (fn GetHealthHandlerFunc) Handle(params GetHealthParams, principal interface{}) middleware.Responder {
+func (fn GetUserHandlerFunc) Handle(params GetUserParams, principal interface{}) middleware.Responder {
 	return fn(params, principal)
 }
 
-// GetHealthHandler interface for that can handle valid get health params
-type GetHealthHandler interface {
-	Handle(GetHealthParams, interface{}) middleware.Responder
+// GetUserHandler interface for that can handle valid get user params
+type GetUserHandler interface {
+	Handle(GetUserParams, interface{}) middleware.Responder
 }
 
-// NewGetHealth creates a new http.Handler for the get health operation
-func NewGetHealth(ctx *middleware.Context, handler GetHealthHandler) *GetHealth {
-	return &GetHealth{Context: ctx, Handler: handler}
+// NewGetUser creates a new http.Handler for the get user operation
+func NewGetUser(ctx *middleware.Context, handler GetUserHandler) *GetUser {
+	return &GetUser{Context: ctx, Handler: handler}
 }
 
-/*GetHealth swagger:route GET /userdata/v1/health getHealth
+/*GetUser swagger:route GET /userdata/v1/user/{tokenId} getUser
 
-Health check
+Get the User
 
 */
-type GetHealth struct {
+type GetUser struct {
 	Context *middleware.Context
-	Handler GetHealthHandler
+	Handler GetUserHandler
 }
 
-func (o *GetHealth) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func (o *GetUser) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
 		r = rCtx
 	}
-	var Params = NewGetHealthParams()
+	var Params = NewGetUserParams()
 
 	uprinc, aCtx, err := o.Context.Authorize(r, route)
 	if err != nil {

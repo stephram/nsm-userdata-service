@@ -9,22 +9,17 @@ import (
 	"errors"
 	"net/url"
 	golangswaggerpaths "path"
-	"strings"
 )
 
-// GetInteractionsURL generates an URL for the get interactions operation
-type GetInteractionsURL struct {
-	TokenID string
-
+// PostInteractionURL generates an URL for the post interaction operation
+type PostInteractionURL struct {
 	_basePath string
-	// avoid unkeyed usage
-	_ struct{}
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *GetInteractionsURL) WithBasePath(bp string) *GetInteractionsURL {
+func (o *PostInteractionURL) WithBasePath(bp string) *PostInteractionURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -32,22 +27,15 @@ func (o *GetInteractionsURL) WithBasePath(bp string) *GetInteractionsURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *GetInteractionsURL) SetBasePath(bp string) {
+func (o *PostInteractionURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *GetInteractionsURL) Build() (*url.URL, error) {
+func (o *PostInteractionURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/userdata/v1/console/interactions/{tokenId}"
-
-	tokenID := o.TokenID
-	if tokenID != "" {
-		_path = strings.Replace(_path, "{tokenId}", tokenID, -1)
-	} else {
-		return nil, errors.New("tokenId is required on GetInteractionsURL")
-	}
+	var _path = "/userdata/v1/console/interactions"
 
 	_basePath := o._basePath
 	if _basePath == "" {
@@ -59,7 +47,7 @@ func (o *GetInteractionsURL) Build() (*url.URL, error) {
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *GetInteractionsURL) Must(u *url.URL, err error) *url.URL {
+func (o *PostInteractionURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -70,17 +58,17 @@ func (o *GetInteractionsURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *GetInteractionsURL) String() string {
+func (o *PostInteractionURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *GetInteractionsURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *PostInteractionURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on GetInteractionsURL")
+		return nil, errors.New("scheme is required for a full url on PostInteractionURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on GetInteractionsURL")
+		return nil, errors.New("host is required for a full url on PostInteractionURL")
 	}
 
 	base, err := o.Build()
@@ -94,6 +82,6 @@ func (o *GetInteractionsURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *GetInteractionsURL) StringFull(scheme, host string) string {
+func (o *PostInteractionURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

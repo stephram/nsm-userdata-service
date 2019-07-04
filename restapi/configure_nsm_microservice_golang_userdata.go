@@ -6,63 +6,85 @@ import (
 	"crypto/tls"
 	"net/http"
 
-	errors "github.com/go-openapi/errors"
-	runtime "github.com/go-openapi/runtime"
-	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/artprocessors/nsm-microservice-golang-userdata/internal/auth"
 
-	"github.com/artprocessors/nsm-microservice-golang-userdata/restapi/operations"
+	"github.com/artprocessors/nsm-microservice-golang-userdata/internal/utils"
+
+	"github.com/artprocessors/nsm-microservice-golang-userdata/internal/userdata"
+
+	log "github.com/sirupsen/logrus"
+
+	"github.com/go-openapi/errors"
+	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/runtime/middleware"
+
+	op "github.com/artprocessors/nsm-microservice-golang-userdata/restapi/operations"
 )
 
 //go:generate swagger generate server --target ../../nsm-microservice-golang-userdata --name NsmMicroserviceGolangUserdata --spec ../spec/userdata-swagger.yaml --model-package restapi/models
 
-func configureFlags(api *operations.NsmMicroserviceGolangUserdataAPI) {
+func init() {
+	utils.GetLogger().Info("initialised logger")
+}
+
+func configureFlags(api *op.NsmMicroserviceGolangUserdataAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.NsmMicroserviceGolangUserdataAPI) http.Handler {
+func configureAPI(api *op.NsmMicroserviceGolangUserdataAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
 	// Set your custom logger if needed. Default one is log.Printf
 	// Expected interface func(string, ...interface{})
 	//
-	// Example:
-	// api.Logger = log.Printf
+	api.Logger = log.Printf
 
 	api.JSONConsumer = runtime.JSONConsumer()
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.GetAvatarForTokenIDHandler == nil {
-		api.GetAvatarForTokenIDHandler = operations.GetAvatarForTokenIDHandlerFunc(func(params operations.GetAvatarForTokenIDParams) middleware.Responder {
-			return middleware.NotImplemented("operation .GetAvatarForTokenID has not yet been implemented")
-		})
-	}
-	if api.GetHealthHandler == nil {
-		api.GetHealthHandler = operations.GetHealthHandlerFunc(func(params operations.GetHealthParams) middleware.Responder {
-			return middleware.NotImplemented("operation .GetHealth has not yet been implemented")
-		})
-	}
-	if api.GetInteractionsHandler == nil {
-		api.GetInteractionsHandler = operations.GetInteractionsHandlerFunc(func(params operations.GetInteractionsParams) middleware.Responder {
-			return middleware.NotImplemented("operation .GetInteractions has not yet been implemented")
-		})
-	}
-	if api.GetStatusByTokenIDHandler == nil {
-		api.GetStatusByTokenIDHandler = operations.GetStatusByTokenIDHandlerFunc(func(params operations.GetStatusByTokenIDParams) middleware.Responder {
-			return middleware.NotImplemented("operation .GetStatusByTokenID has not yet been implemented")
-		})
-	}
-	if api.PostAvatarForTokenIDHandler == nil {
-		api.PostAvatarForTokenIDHandler = operations.PostAvatarForTokenIDHandlerFunc(func(params operations.PostAvatarForTokenIDParams) middleware.Responder {
-			return middleware.NotImplemented("operation .PostAvatarForTokenID has not yet been implemented")
-		})
-	}
-	if api.PostInteractionsHandler == nil {
-		api.PostInteractionsHandler = operations.PostInteractionsHandlerFunc(func(params operations.PostInteractionsParams) middleware.Responder {
-			return middleware.NotImplemented("operation .PostInteractions has not yet been implemented")
-		})
-	}
+	// Applies when the "api-key" header is set
+	api.APIKeyAuth = auth.ApiKeyAuth
+
+	// // Applies when the Authorization header is set with the Basic scheme
+	api.BasicAuth = auth.BasicAuth
+
+	// Set your custom authorizer if needed. Default one is security.Authorized()
+	// Expected interface runtime.Authorizer
+	//
+	// Example:
+	//api.APIAuthorizer = security.Authorized()
+
+	userDataService := userdata.New()
+
+	api.GetHealthHandler = op.GetHealthHandlerFunc(func(params op.GetHealthParams, principal interface{}) middleware.Responder {
+		return userDataService.GetHealth(params)
+	})
+	api.GetInfoHandler = op.GetInfoHandlerFunc(func(params op.GetInfoParams, principal interface{}) middleware.Responder {
+		return userDataService.GetInfo(params)
+	})
+
+	api.GetUserHandler = op.GetUserHandlerFunc(func(params op.GetUserParams, principal interface{}) middleware.Responder {
+		return userDataService.GetUser(params)
+	})
+	api.PostUserHandler = op.PostUserHandlerFunc(func(params op.PostUserParams, principal interface{}) middleware.Responder {
+		return userDataService.PostUser(params)
+	})
+
+	api.GetInteractionsHandler = op.GetInteractionsHandlerFunc(func(params op.GetInteractionsParams, principal interface{}) middleware.Responder {
+		return userDataService.GetInteractions(params)
+	})
+	api.PostInteractionHandler = op.PostInteractionHandlerFunc(func(params op.PostInteractionParams, principal interface{}) middleware.Responder {
+		return userDataService.PostInteraction(params)
+	})
+
+	api.GetGameOnResultsHandler = op.GetGameOnResultsHandlerFunc(func(params op.GetGameOnResultsParams, principal interface{}) middleware.Responder {
+		return userDataService.GetGameOnResults(params)
+	})
+	api.PostGameOnResultsHandler = op.PostGameOnResultsHandlerFunc(func(params op.PostGameOnResultsParams, principal interface{}) middleware.Responder {
+		return userDataService.PostGameOnResults(params)
+	})
 
 	api.ServerShutdown = func() {}
 

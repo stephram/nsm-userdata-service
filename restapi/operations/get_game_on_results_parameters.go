@@ -14,18 +14,18 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 )
 
-// NewGetInteractionsParams creates a new GetInteractionsParams object
+// NewGetGameOnResultsParams creates a new GetGameOnResultsParams object
 // no default values defined in spec.
-func NewGetInteractionsParams() GetInteractionsParams {
+func NewGetGameOnResultsParams() GetGameOnResultsParams {
 
-	return GetInteractionsParams{}
+	return GetGameOnResultsParams{}
 }
 
-// GetInteractionsParams contains all the bound params for the get interactions operation
+// GetGameOnResultsParams contains all the bound params for the get game on results operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters getInteractions
-type GetInteractionsParams struct {
+// swagger:parameters getGameOnResults
+type GetGameOnResultsParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -40,8 +40,8 @@ type GetInteractionsParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewGetInteractionsParams() beforehand.
-func (o *GetInteractionsParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetGameOnResultsParams() beforehand.
+func (o *GetGameOnResultsParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -58,7 +58,7 @@ func (o *GetInteractionsParams) BindRequest(r *http.Request, route *middleware.M
 }
 
 // bindTokenID binds and validates parameter TokenID from path.
-func (o *GetInteractionsParams) bindTokenID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetGameOnResultsParams) bindTokenID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]

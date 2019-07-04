@@ -1,0 +1,5 @@
+vendor*
+cover*
+.idea*
+main
+*.sqlite
