@@ -15,7 +15,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	models "github.com/artprocessors/nsm-microservice-golang-userdata/restapi/models"
+	models "github.com/stephram/nsm-userdata-service/restapi/models"
 )
 
 // NewPostGameOnResultsParams creates a new PostGameOnResultsParams object

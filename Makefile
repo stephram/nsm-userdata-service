@@ -2,8 +2,8 @@ SHELL:=/bin/bash
 
 # project details
 PRODUCT = nsm
-APPNAME = microservice-golang-userdata
-PACKAGE = github.com/artprocessors/nsm-microservice-golang-userdata
+APPNAME = userdata
+PACKAGE = nsm-userdata
 
 # build variables
 BRANCH_NAME ?= $(shell git rev-parse --abbrev-ref HEAD)
@@ -45,7 +45,7 @@ build:
 	@echo "Building with overrides '$(BUILD_OVERRIDES)'"
 	CGO_ENABLED=0 GOARCH=amd64 \
 		go build -a \
-		-installsuffix cgo \
+#		-installsuffix cgo \
 		-ldflags='-w -s $(BUILD_OVERRIDES)' \
 		-o main $(CMDPATH)
 
@@ -79,7 +79,7 @@ build-swagger: clean-swagger
 
 generate-server: clean-generated-server
 	swagger generate server \
-		--name nsm-microservice-golang-userdata \
+		--name $(PACKAGE) \
 		--model-package restapi/models \
 		-f ./spec/userdata-swagger.yaml
 

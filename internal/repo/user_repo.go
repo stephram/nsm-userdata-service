@@ -1,6 +1,6 @@
 package repo
 
-import "github.com/artprocessors/nsm-microservice-golang-userdata/restapi/models"
+import "github.com/stephram/nsm-userdata-service/restapi/models"
 
 type UserRepo interface {
 	FindUser(tokenID string) (*models.User, error)

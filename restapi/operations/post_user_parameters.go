@@ -13,7 +13,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
-	models "github.com/artprocessors/nsm-microservice-golang-userdata/restapi/models"
+	models "github.com/stephram/nsm-userdata-service/restapi/models"
 )
 
 // NewPostUserParams creates a new PostUserParams object

@@ -9,9 +9,9 @@ User Data service for storing and querying user interactions.
       http
     Host: localhost:8080
     BasePath: /
-    Version: 1.0.0
-    License: Art Processors Pty. Ltd. https://www.artprocessors.net/licensing
-    Contact: <support@artprocessors.net>
+    Version: 1.0.1
+    License: Stephen Graham
+    Contact: <stephram@gmail.com>
 
     Consumes:
     - application/json

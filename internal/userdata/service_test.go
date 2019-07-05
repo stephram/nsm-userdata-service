@@ -7,11 +7,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/artprocessors/nsm-microservice-golang-userdata/restapi/models"
+	"github.com/stephram/nsm-userdata-service/restapi/models"
+	"github.com/stephram/nsm-userdata-service/restapi/operations"
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/artprocessors/nsm-microservice-golang-userdata/restapi/operations"
 	"github.com/stretchr/testify/assert"
 )
 

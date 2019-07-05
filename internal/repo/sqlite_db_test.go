@@ -4,14 +4,12 @@ import (
 	"os"
 	"testing"
 
-	"github.com/artprocessors/nsm-microservice-golang-userdata/internal/utils/ulid"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/stephram/nsm-userdata-service/restapi/models"
+	"github.com/transurbantech/trf-microservice-golang-rules/pkg/ulid"
 
 	"github.com/aws/aws-sdk-go/aws"
-
-	"github.com/artprocessors/nsm-microservice-golang-userdata/restapi/models"
 
 	"github.com/stretchr/testify/assert"
 )

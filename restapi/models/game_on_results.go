@@ -15,8 +15,8 @@ import (
 // swagger:model GameOnResults
 type GameOnResults struct {
 
-	// baseball points
-	BaseballPoints float64 `json:"baseballPoints,omitempty"`
+	// basketball points
+	BasketballPoints float64 `json:"basketballPoints,omitempty"`
 
 	// classic catch video
 	ClassicCatchVideo string `json:"classicCatchVideo,omitempty"`

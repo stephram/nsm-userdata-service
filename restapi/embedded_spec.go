@@ -26,13 +26,12 @@ func init() {
     "description": "User Data service for storing and querying user interactions.",
     "title": "User Data Service",
     "contact": {
-      "email": "support@artprocessors.net"
+      "email": "stephram@gmail.com"
     },
     "license": {
-      "name": "Art Processors Pty. Ltd.",
-      "url": "https://www.artprocessors.net/licensing"
+      "name": "Stephen Graham"
     },
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "host": "localhost:8080",
   "basePath": "/",
@@ -427,7 +426,7 @@ func init() {
     "GameOnResults": {
       "type": "object",
       "properties": {
-        "baseballPoints": {
+        "basketballPoints": {
           "type": "number"
         },
         "classicCatchVideo": {
@@ -560,13 +559,12 @@ func init() {
     "description": "User Data service for storing and querying user interactions.",
     "title": "User Data Service",
     "contact": {
-      "email": "support@artprocessors.net"
+      "email": "stephram@gmail.com"
     },
     "license": {
-      "name": "Art Processors Pty. Ltd.",
-      "url": "https://www.artprocessors.net/licensing"
+      "name": "Stephen Graham"
     },
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "host": "localhost:8080",
   "basePath": "/",
@@ -961,7 +959,7 @@ func init() {
     "GameOnResults": {
       "type": "object",
       "properties": {
-        "baseballPoints": {
+        "basketballPoints": {
           "type": "number"
         },
         "classicCatchVideo": {

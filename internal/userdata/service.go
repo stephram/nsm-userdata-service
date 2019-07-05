@@ -1,15 +1,13 @@
 package userdata
 
 import (
-	"github.com/artprocessors/nsm-microservice-golang-userdata/internal/repo"
-
-	"github.com/artprocessors/nsm-microservice-golang-userdata/pkg/app"
-
-	"github.com/artprocessors/nsm-microservice-golang-userdata/restapi/models"
-	op "github.com/artprocessors/nsm-microservice-golang-userdata/restapi/operations"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/go-openapi/runtime/middleware"
 	log "github.com/sirupsen/logrus"
+	"github.com/stephram/nsm-userdata-service/internal/repo"
+	"github.com/stephram/nsm-userdata-service/pkg/app"
+	"github.com/stephram/nsm-userdata-service/restapi/models"
+	op "github.com/stephram/nsm-userdata-service/restapi/operations"
 )
 
 const (

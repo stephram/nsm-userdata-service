@@ -1,11 +1,11 @@
 package repo
 
 import (
-	"github.com/artprocessors/nsm-microservice-golang-userdata/restapi/models"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	log "github.com/sirupsen/logrus"
+	"github.com/stephram/nsm-userdata-service/restapi/models"
 )
 
 type DbUser struct {
@@ -21,7 +21,7 @@ type DbGameOnResults struct {
 	gorm.Model
 
 	TokenID                 string
-	BaseballPoints          float64 `gorm:"type:decimal(10, 2)"`
+	BasketballPoints        float64 `gorm:"type:decimal(10, 2)"`
 	CycleDistance           float64 `gorm:"type:decimal(10, 2)"`
 	HorsePosition           float64 `gorm:"type:decimal(10, 2)"`
 	NetballPoints           float64 `gorm:"type:decimal(10, 2)"`

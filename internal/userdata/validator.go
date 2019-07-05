@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/artprocessors/nsm-microservice-golang-userdata/restapi/models"
+	"github.com/stephram/nsm-userdata-service/restapi/models"
 )
 
 func validateUser(tokenID string, user *models.User) error {

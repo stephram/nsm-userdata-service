@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	models "github.com/artprocessors/nsm-microservice-golang-userdata/restapi/models"
+	models "github.com/stephram/nsm-userdata-service/restapi/models"
 )
 
 // PostInteractionOKCode is the HTTP code returned for type PostInteractionOK
