@@ -227,6 +227,9 @@ paths:
           type: string
           in: path
           required: true
+        - name: exhibitId
+          type: string
+          in: header
         - name: gameOnResults
           schema:
             $ref: '#/definitions/GameOnResults'

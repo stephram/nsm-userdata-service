@@ -35,6 +35,10 @@ type PostGameOnResultsParams struct {
 	HTTPRequest *http.Request `json:"-"`
 
 	/*
+	  In: header
+	*/
+	ExhibitID *string
+	/*
 	  Required: true
 	  In: body
 	*/
@@ -54,6 +58,10 @@ func (o *PostGameOnResultsParams) BindRequest(r *http.Request, route *middleware
 	var res []error
 
 	o.HTTPRequest = r
+
+	if err := o.bindExhibitID(r.Header[http.CanonicalHeaderKey("exhibitId")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
@@ -85,6 +93,24 @@ func (o *PostGameOnResultsParams) BindRequest(r *http.Request, route *middleware
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindExhibitID binds and validates parameter ExhibitID from header.
+func (o *PostGameOnResultsParams) bindExhibitID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.ExhibitID = &raw
+
 	return nil
 }
 

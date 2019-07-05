@@ -1,8 +1,8 @@
 SHELL:=/bin/bash
 
 # project details
-PRODUCT =
-APPNAME = nsm-userdata-service
+PRODUCT = nsm
+APPNAME = userdata-service
 PACKAGE = $(PRODUCT)-$(APPNAME)
 
 # build variables

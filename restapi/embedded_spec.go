@@ -192,6 +192,11 @@ func init() {
             "required": true
           },
           {
+            "type": "string",
+            "name": "exhibitId",
+            "in": "header"
+          },
+          {
             "name": "gameOnResults",
             "in": "body",
             "required": true,
@@ -723,6 +728,11 @@ func init() {
             "name": "tokenId",
             "in": "path",
             "required": true
+          },
+          {
+            "type": "string",
+            "name": "exhibitId",
+            "in": "header"
           },
           {
             "name": "gameOnResults",
