@@ -20,9 +20,9 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewNsmUserdataAPI creates a new NsmUserdata instance
-func NewNsmUserdataAPI(spec *loads.Document) *NsmUserdataAPI {
-	return &NsmUserdataAPI{
+// NewNsmUserdataServiceAPI creates a new NsmUserdataService instance
+func NewNsmUserdataServiceAPI(spec *loads.Document) *NsmUserdataServiceAPI {
+	return &NsmUserdataServiceAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -76,8 +76,8 @@ func NewNsmUserdataAPI(spec *loads.Document) *NsmUserdataAPI {
 	}
 }
 
-/*NsmUserdataAPI User Data service for storing and querying user interactions. */
-type NsmUserdataAPI struct {
+/*NsmUserdataServiceAPI User Data service for storing and querying user interactions. */
+type NsmUserdataServiceAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -148,42 +148,42 @@ type NsmUserdataAPI struct {
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *NsmUserdataAPI) SetDefaultProduces(mediaType string) {
+func (o *NsmUserdataServiceAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *NsmUserdataAPI) SetDefaultConsumes(mediaType string) {
+func (o *NsmUserdataServiceAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *NsmUserdataAPI) SetSpec(spec *loads.Document) {
+func (o *NsmUserdataServiceAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *NsmUserdataAPI) DefaultProduces() string {
+func (o *NsmUserdataServiceAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *NsmUserdataAPI) DefaultConsumes() string {
+func (o *NsmUserdataServiceAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *NsmUserdataAPI) Formats() strfmt.Registry {
+func (o *NsmUserdataServiceAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *NsmUserdataAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *NsmUserdataServiceAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the NsmUserdataAPI
-func (o *NsmUserdataAPI) Validate() error {
+// Validate validates the registrations in the NsmUserdataServiceAPI
+func (o *NsmUserdataServiceAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -242,12 +242,12 @@ func (o *NsmUserdataAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *NsmUserdataAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *NsmUserdataServiceAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *NsmUserdataAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *NsmUserdataServiceAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 
 	result := make(map[string]runtime.Authenticator)
 	for name, scheme := range schemes {
@@ -268,14 +268,14 @@ func (o *NsmUserdataAPI) AuthenticatorsFor(schemes map[string]spec.SecuritySchem
 }
 
 // Authorizer returns the registered authorizer
-func (o *NsmUserdataAPI) Authorizer() runtime.Authorizer {
+func (o *NsmUserdataServiceAPI) Authorizer() runtime.Authorizer {
 
 	return o.APIAuthorizer
 
 }
 
 // ConsumersFor gets the consumers for the specified media types
-func (o *NsmUserdataAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *NsmUserdataServiceAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 
 	result := make(map[string]runtime.Consumer)
 	for _, mt := range mediaTypes {
@@ -295,7 +295,7 @@ func (o *NsmUserdataAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Co
 }
 
 // ProducersFor gets the producers for the specified media types
-func (o *NsmUserdataAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *NsmUserdataServiceAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 
 	result := make(map[string]runtime.Producer)
 	for _, mt := range mediaTypes {
@@ -315,7 +315,7 @@ func (o *NsmUserdataAPI) ProducersFor(mediaTypes []string) map[string]runtime.Pr
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *NsmUserdataAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *NsmUserdataServiceAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -330,8 +330,8 @@ func (o *NsmUserdataAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	return h, ok
 }
 
-// Context returns the middleware context for the nsm userdata API
-func (o *NsmUserdataAPI) Context() *middleware.Context {
+// Context returns the middleware context for the nsm userdata service API
+func (o *NsmUserdataServiceAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -339,7 +339,7 @@ func (o *NsmUserdataAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *NsmUserdataAPI) initHandlerCache() {
+func (o *NsmUserdataServiceAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 
 	if o.handlers == nil {
@@ -390,7 +390,7 @@ func (o *NsmUserdataAPI) initHandlerCache() {
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *NsmUserdataAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *NsmUserdataServiceAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -400,18 +400,18 @@ func (o *NsmUserdataAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *NsmUserdataAPI) Init() {
+func (o *NsmUserdataServiceAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *NsmUserdataAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *NsmUserdataServiceAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *NsmUserdataAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *NsmUserdataServiceAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }

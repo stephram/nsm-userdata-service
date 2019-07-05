@@ -124,8 +124,8 @@ func (u *userRepoImpl) reduceToLatest(dbGoRs []DbGameOnResults) *models.GameOnRe
 		if len(mGoR.ClassicCatchVideo) == 0 {
 			mGoR.ClassicCatchVideo = dbGoRs[i].ClassicCatchVideo
 		}
-		if mGoR.BaseballPoints <= 0 {
-			mGoR.BaseballPoints = dbGoRs[i].BaseballPoints
+		if mGoR.BasketballPoints <= 0 {
+			mGoR.BasketballPoints = dbGoRs[i].BasketballPoints
 		}
 	}
 	return mGoR
@@ -153,7 +153,7 @@ func (u *userRepoImpl) toDbUser(user *models.User) *DbUser {
 
 func (u *userRepoImpl) toModelGameOnResults(dbGoR *DbGameOnResults) *models.GameOnResults {
 	return &models.GameOnResults{
-		BaseballPoints:          dbGoR.BaseballPoints,
+		BasketballPoints:        dbGoR.BasketballPoints,
 		ClassicCatchVideo:       dbGoR.ClassicCatchVideo,
 		YouMakeTheRulesPostcard: dbGoR.YouMakeTheRulesPostcard,
 		YouMakeTheRulesVisited:  dbGoR.YouMakeTheRulesVisited,
@@ -171,7 +171,7 @@ func (u *userRepoImpl) toModelGameOnResults(dbGoR *DbGameOnResults) *models.Game
 
 func (u *userRepoImpl) toDbGameOnResults(gameOnResults *models.GameOnResults) *DbGameOnResults {
 	return &DbGameOnResults{
-		BaseballPoints:          gameOnResults.BaseballPoints,
+		BasketballPoints:        gameOnResults.BasketballPoints,
 		CycleDistance:           gameOnResults.CycleDistance,
 		HorsePosition:           gameOnResults.HorsePosition,
 		NetballPoints:           gameOnResults.NetballPoints,

@@ -1,9 +1,9 @@
 SHELL:=/bin/bash
 
 # project details
-PRODUCT = nsm
-APPNAME = userdata
-PACKAGE = nsm-userdata
+PRODUCT =
+APPNAME = nsm-userdata-service
+PACKAGE = $(PRODUCT)-$(APPNAME)
 
 # build variables
 BRANCH_NAME ?= $(shell git rev-parse --abbrev-ref HEAD)
@@ -45,7 +45,7 @@ build:
 	@echo "Building with overrides '$(BUILD_OVERRIDES)'"
 	CGO_ENABLED=0 GOARCH=amd64 \
 		go build -a \
-#		-installsuffix cgo \
+		-installsuffix cgo \
 		-ldflags='-w -s $(BUILD_OVERRIDES)' \
 		-o main $(CMDPATH)
 

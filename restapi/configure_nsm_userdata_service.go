@@ -4,7 +4,14 @@ package restapi
 
 import (
 	"crypto/tls"
+	"log"
 	"net/http"
+
+	"github.com/stephram/nsm-userdata-service/internal/utils"
+
+	"github.com/stephram/nsm-userdata-service/internal/auth"
+
+	"github.com/stephram/nsm-userdata-service/internal/userdata"
 
 	errors "github.com/go-openapi/errors"
 	runtime "github.com/go-openapi/runtime"
@@ -13,7 +20,11 @@ import (
 	"github.com/stephram/nsm-userdata-service/restapi/operations"
 )
 
-//go:generate swagger generate server --target ../../nsm-microservice-golang-userdata --name NsmUserdataService --spec ../spec/userdata-swagger.yaml --model-package restapi/models
+//go:generate swagger generate server --target ../../nsm-userdata-service --name NsmUserdataService --spec ../spec/userdata-swagger.yaml --model-package restapi/models
+
+func init() {
+	utils.GetLogger()
+}
 
 func configureFlags(api *operations.NsmUserdataServiceAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -27,7 +38,7 @@ func configureAPI(api *operations.NsmUserdataServiceAPI) http.Handler {
 	// Expected interface func(string, ...interface{})
 	//
 	// Example:
-	// api.Logger = log.Printf
+	api.Logger = log.Printf
 
 	api.JSONConsumer = runtime.JSONConsumer()
 
@@ -35,11 +46,11 @@ func configureAPI(api *operations.NsmUserdataServiceAPI) http.Handler {
 
 	// Applies when the "api-key" header is set
 	api.APIKeyAuth = func(token string) (interface{}, error) {
-		return nil, errors.NotImplemented("api key auth (ApiKey) api-key from header param [api-key] has not yet been implemented")
+		return auth.ApiKeyAuth(token)
 	}
 	// Applies when the Authorization header is set with the Basic scheme
 	api.BasicAuth = func(user string, pass string) (interface{}, error) {
-		return nil, errors.NotImplemented("basic auth  (Basic) has not yet been implemented")
+		return auth.BasicAuth(user, pass)
 	}
 
 	// Set your custom authorizer if needed. Default one is security.Authorized()
@@ -47,46 +58,34 @@ func configureAPI(api *operations.NsmUserdataServiceAPI) http.Handler {
 	//
 	// Example:
 	// api.APIAuthorizer = security.Authorized()
-	if api.GetGameOnResultsHandler == nil {
-		api.GetGameOnResultsHandler = operations.GetGameOnResultsHandlerFunc(func(params operations.GetGameOnResultsParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation .GetGameOnResults has not yet been implemented")
-		})
-	}
-	if api.GetHealthHandler == nil {
-		api.GetHealthHandler = operations.GetHealthHandlerFunc(func(params operations.GetHealthParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation .GetHealth has not yet been implemented")
-		})
-	}
-	if api.GetInfoHandler == nil {
-		api.GetInfoHandler = operations.GetInfoHandlerFunc(func(params operations.GetInfoParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation .GetInfo has not yet been implemented")
-		})
-	}
-	if api.GetInteractionsHandler == nil {
-		api.GetInteractionsHandler = operations.GetInteractionsHandlerFunc(func(params operations.GetInteractionsParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation .GetInteractions has not yet been implemented")
-		})
-	}
-	if api.GetUserHandler == nil {
-		api.GetUserHandler = operations.GetUserHandlerFunc(func(params operations.GetUserParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation .GetUser has not yet been implemented")
-		})
-	}
-	if api.PostGameOnResultsHandler == nil {
-		api.PostGameOnResultsHandler = operations.PostGameOnResultsHandlerFunc(func(params operations.PostGameOnResultsParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation .PostGameOnResults has not yet been implemented")
-		})
-	}
-	if api.PostInteractionHandler == nil {
-		api.PostInteractionHandler = operations.PostInteractionHandlerFunc(func(params operations.PostInteractionParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation .PostInteraction has not yet been implemented")
-		})
-	}
-	if api.PostUserHandler == nil {
-		api.PostUserHandler = operations.PostUserHandlerFunc(func(params operations.PostUserParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation .PostUser has not yet been implemented")
-		})
-	}
+
+	userdata := userdata.New()
+
+	api.GetGameOnResultsHandler = operations.GetGameOnResultsHandlerFunc(func(params operations.GetGameOnResultsParams, principal interface{}) middleware.Responder {
+		return userdata.GetGameOnResults(params)
+	})
+	api.GetHealthHandler = operations.GetHealthHandlerFunc(func(params operations.GetHealthParams, principal interface{}) middleware.Responder {
+		return userdata.GetHealth(params)
+	})
+	api.GetInfoHandler = operations.GetInfoHandlerFunc(func(params operations.GetInfoParams, principal interface{}) middleware.Responder {
+		return userdata.GetInfo(params)
+	})
+	api.GetInteractionsHandler = operations.GetInteractionsHandlerFunc(func(params operations.GetInteractionsParams, principal interface{}) middleware.Responder {
+		return userdata.GetInteractions(params)
+	})
+	api.GetUserHandler = operations.GetUserHandlerFunc(func(params operations.GetUserParams, principal interface{}) middleware.Responder {
+		return userdata.GetUser(params)
+	})
+	api.PostGameOnResultsHandler = operations.PostGameOnResultsHandlerFunc(func(params operations.PostGameOnResultsParams, principal interface{}) middleware.Responder {
+		return userdata.PostGameOnResults(params)
+	})
+	api.PostInteractionHandler = operations.PostInteractionHandlerFunc(func(params operations.PostInteractionParams, principal interface{}) middleware.Responder {
+		return userdata.PostInteraction(params)
+	})
+
+	api.PostUserHandler = operations.PostUserHandlerFunc(func(params operations.PostUserParams, principal interface{}) middleware.Responder {
+		return userdata.PostUser(params)
+	})
 
 	api.ServerShutdown = func() {}
 
