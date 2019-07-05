@@ -67,6 +67,7 @@ func (s *serviceImpl) GetUser(params op.GetUserParams) middleware.Responder {
 	var user *models.User
 	var err error
 
+	log.WithField("params", params).Infof("")
 	if user, err = s.repo.FindUser(params.TokenID); err != nil {
 		return op.NewGetUserNotFound().WithPayload(&models.APIError{
 			Code:    aws.Int64(-9),
@@ -80,6 +81,7 @@ func (s *serviceImpl) PostUser(params op.PostUserParams) middleware.Responder {
 	var user *models.User
 	var err error
 
+	log.WithField("params", params).Infof("")
 	if user, err = s.repo.StoreUser(params.User); err != nil {
 		return op.NewPostUserInternalServerError().WithPayload(&models.APIError{
 			Code:    aws.Int64(-10),
@@ -99,6 +101,7 @@ func (s *serviceImpl) GetGameOnResults(params op.GetGameOnResultsParams) middlew
 	var gameOnResults *models.GameOnResults
 	var err error
 
+	log.WithField("params", params).Infof("")
 	if gameOnResults, err = s.repo.FindGameOnResults(params.TokenID); err != nil {
 		return op.NewGetGameOnResultsNotFound().WithPayload(&models.APIError{
 			Code:    aws.Int64(-12),
@@ -112,6 +115,7 @@ func (s *serviceImpl) PostGameOnResults(params op.PostGameOnResultsParams) middl
 	var gor *models.GameOnResults
 	var err error
 
+	log.WithField("params", params).Infof("")
 	if gor, err = s.repo.StoreGameOnResults(params.TokenID, params.GameOnResults); err != nil {
 		return op.NewPostGameOnResultsInternalServerError().WithPayload(&models.APIError{
 			Code:    aws.Int64(-11),
@@ -122,9 +126,11 @@ func (s *serviceImpl) PostGameOnResults(params op.PostGameOnResultsParams) middl
 }
 
 func (s *serviceImpl) GetInteractions(params op.GetInteractionsParams) middleware.Responder {
+	log.WithField("params", params).Infof("")
 	return op.NewGetInteractionsOK().WithPayload(models.ConsoleInteractions{})
 }
 
 func (s *serviceImpl) PostInteraction(params op.PostInteractionParams) middleware.Responder {
+	log.WithField("params", params).Infof("")
 	return op.NewPostInteractionOK().WithPayload(&models.ConsoleInteraction{})
 }

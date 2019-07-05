@@ -43,7 +43,7 @@ install:
 build:
 	go mod vendor
 	@echo "Building with overrides '$(BUILD_OVERRIDES)'"
-	CGO_ENABLED=0 GOARCH=amd64 \
+	CGO_ENABLED=1 GOARCH=amd64 \
 		go build -a \
 		-installsuffix cgo \
 		-ldflags='-w -s $(BUILD_OVERRIDES)' \
