@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/stephram/nsm-userdata-service/internal/utils"
 
@@ -92,6 +93,34 @@ func configureAPI(api *operations.NsmUserdataServiceAPI) http.Handler {
 	return setupGlobalMiddleware(api.Serve(setupMiddlewares))
 }
 
+func fileServerMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/userdata") {
+			next.ServeHTTP(w, r)
+		} else {
+			http.FileServer(http.Dir("./swagger-ui/index.html")).ServeHTTP(w, r)
+		}
+	})
+}
+
+// See one of the many discussion about how to best acheive swagger-ui servings.
+// A good place to stat: https://github.com/go-swagger/go-swagger/issues/477
+func uiMiddleware(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Shortcut helpers for swagger-ui
+		if r.URL.Path == "/swagger-ui" || r.URL.Path == "/api/help" {
+			http.Redirect(w, r, "/swagger-ui/", http.StatusFound)
+			return
+		}
+		// Serving ./swagger-ui/
+		if strings.Index(r.URL.Path, "/swagger-ui/") == 0 {
+			http.StripPrefix("/swagger-ui/", http.FileServer(http.Dir("swagger-ui"))).ServeHTTP(w, r)
+			return
+		}
+		handler.ServeHTTP(w, r)
+	})
+}
+
 // The TLS configuration before HTTPS server starts.
 func configureTLS(tlsConfig *tls.Config) {
 	// Make all necessary changes to the TLS configuration here.
@@ -113,5 +142,7 @@ func setupMiddlewares(handler http.Handler) http.Handler {
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
 // So this is a good place to plug in a panic handling middleware, logging and metrics
 func setupGlobalMiddleware(handler http.Handler) http.Handler {
-	return handler
+	// return fileServerMiddleware(handler)
+	return uiMiddleware(handler)
+	// return handler
 }

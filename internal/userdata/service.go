@@ -53,14 +53,18 @@ func (s *serviceImpl) GetHealth(params op.GetHealthParams) middleware.Responder 
 
 func (s *serviceImpl) GetInfo(params op.GetInfoParams) middleware.Responder {
 	log.WithField("params", params).Infof("")
-	return op.NewGetInfoOK().WithPayload(&models.InfoResponse{
+
+	infoResponse := &models.InfoResponse{
 		Name:       aws.String(app.Name),
 		Author:     aws.String(app.Author),
 		BranchName: aws.String(app.Branch),
 		BuildDate:  aws.String(app.BuildDate),
 		GitCommit:  aws.String(app.Commit),
 		Version:    aws.String(app.Version),
-	})
+	}
+	log.Infof("response: %+v, %+v", infoResponse, app.New())
+
+	return op.NewGetInfoOK().WithPayload(infoResponse)
 }
 
 func (s *serviceImpl) GetUser(params op.GetUserParams) middleware.Responder {

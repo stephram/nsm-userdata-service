@@ -59,10 +59,8 @@ clean-generated-server:
 	mv $(TMP)/* ./restapi/ || true
 	rm -rf $(TMP)
 
-clean-generated-client:
-	rm -rf ./client/sdk
 
-clean: clean-generated-server clean-generated-client
+clean: clean-generated-server
 
 build-dev: install
 	@echo "Building with overrides '$(BUILD_OVERRIDES)'"
@@ -73,15 +71,15 @@ build-dev: install
 clean-swagger:
 	rm -f swagger.{yaml,json}
 
-build-swagger: clean-swagger
-	swagger mixin --format=yaml --output ./api/swagger.yaml ./spec/userdata-swagger.yaml
-	swagger mixin --format=json --output ./api/swagger.json ./spec/userdata-swagger.yaml
+generate-swagger: clean-swagger
+	swagger mixin --format=yaml --output ./api/swagger/swagger.yaml ./spec/base.yaml ./spec/userdata-swagger.yaml
+	swagger mixin --format=json --output ./api/swagger/swagger.json ./spec/base.yaml ./spec/userdata-swagger.yaml
 
-generate-server: clean-generated-server
+generate-server: clean-generated-server generate-swagger
 	swagger generate server \
 		--name $(PACKAGE) \
 		--model-package restapi/models \
-		-f ./spec/userdata-swagger.yaml
+		-f ./api/swagger/swagger.yaml
 
 generate: generate-server
 

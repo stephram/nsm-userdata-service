@@ -10,11 +10,20 @@ import (
 
 type DbUser struct {
 	gorm.Model
+
 	TokenID  string `gorm:"type:varchar(64);unique_index"`
 	Name     string `gorm:"type:varchar(128)"`
 	GroupID  string
 	AvatarID string
 	IsChild  bool
+}
+
+type DbInteractions struct {
+	gorm.Model
+
+	TokenID     string
+	ExhibitIID  string
+	Interaction string
 }
 
 type DbGameOnResults struct {
@@ -50,18 +59,17 @@ func (u *userRepoImpl) FindUser(tokenID string) (*models.User, error) {
 }
 
 func (u *userRepoImpl) StoreUser(user *models.User) (*models.User, error) {
-	var dbUser DbUser // dbUser := u.toDbUser(user)
-
-	// if u.db.NewRecord(dbUser) {
-	// 	err := u.db.FirstOrCreate(dbUser, dbUser).Error
-	// 	return u.toModelUser(dbUser), err
-	// }
-	//
-	// err := u.db.Update(dbUser).Error
-	// return u.toModelUser(dbUser), err
-
+	var dbUser DbUser
 	err := u.db.Where(DbUser{TokenID: *user.TokenID}).Assign(u.toDbUser(user)).FirstOrCreate(&dbUser).Error
 	return u.toModelUser(&dbUser), err
+}
+
+func (u *userRepoImpl) FindInteractions(tokenID, exhibitID string) ([]*models.ConsoleInteraction, error) {
+	return nil, nil
+}
+
+func (u *userRepoImpl) StoreInteractions(interactions []*models.ConsoleInteraction) ([]*models.ConsoleInteraction, error) {
+	return nil, nil
 }
 
 func (u *userRepoImpl) FindGameOnResults(tokenID string) (*models.GameOnResults, error) {

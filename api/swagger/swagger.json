@@ -1,0 +1,524 @@
+{
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/userdata/v1/console/interactions": {
+      "post": {
+        "description": "PostInteraction for tokenId",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "postInteraction",
+        "parameters": [
+          {
+            "name": "interaction",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConsoleInteraction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/ConsoleInteraction"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ConsoleInteraction"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/userdata/v1/console/interactions/{tokenId}": {
+      "get": {
+        "description": "GetInteractions for tokenId",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getInteractions",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "tokenId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/ConsoleInteractions"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/userdata/v1/gameon/results/{tokenId}": {
+      "get": {
+        "description": "Get GameOnResults for tokenId",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getGameOnResults",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "tokenId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/GameOnResults"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Post / Update GameOnResults",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "postGameOnResults",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "tokenId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "exhibitId",
+            "in": "header"
+          },
+          {
+            "name": "gameOnResults",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GameOnResults"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/GameOnResults"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/GameOnResults"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/userdata/v1/health": {
+      "get": {
+        "description": "Health check",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/HealthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/userdata/v1/info": {
+      "get": {
+        "description": "Information",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/InfoResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/userdata/v1/user": {
+      "post": {
+        "description": "Create or Update the user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "postUser",
+        "parameters": [
+          {
+            "description": "The User for the tokenId",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    },
+    "/userdata/v1/user/{tokenId}": {
+      "get": {
+        "description": "Get the User",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The unique tokenId (nfcId) of the user",
+            "name": "tokenId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ApiError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ApiError": {
+      "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "description": "Internal error code",
+          "type": "integer",
+          "format": "int"
+        },
+        "message": {
+          "description": "Descriptive message",
+          "type": "string"
+        }
+      }
+    },
+    "ConsoleInteraction": {
+      "type": "object",
+      "required": [
+        "exhibitId",
+        "tokenId"
+      ],
+      "properties": {
+        "exhibitId": {
+          "type": "string"
+        },
+        "interaction": {
+          "type": "string"
+        },
+        "tokenId": {
+          "type": "string"
+        }
+      }
+    },
+    "ConsoleInteractions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConsoleInteraction"
+      }
+    },
+    "GameOnResults": {
+      "type": "object",
+      "properties": {
+        "basketballPoints": {
+          "type": "number"
+        },
+        "classicCatchVideo": {
+          "type": "string"
+        },
+        "cycleDistance": {
+          "type": "number"
+        },
+        "horsePosition": {
+          "type": "number"
+        },
+        "netballPoints": {
+          "type": "number"
+        },
+        "pressureCookerScore": {
+          "type": "number"
+        },
+        "reactionTime": {
+          "type": "number"
+        },
+        "rugbyLeagueGoals": {
+          "type": "number"
+        },
+        "rugbyUnionGoals": {
+          "type": "number"
+        },
+        "soccerGoals": {
+          "type": "number"
+        },
+        "surfingTime": {
+          "type": "number"
+        },
+        "youMakeTheRulesPostcard": {
+          "type": "string"
+        },
+        "youMakeTheRulesVisited": {
+          "type": "boolean"
+        }
+      }
+    },
+    "HealthResponse": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "InfoResponse": {
+      "type": "object",
+      "required": [
+        "name",
+        "buildDate",
+        "branchName",
+        "gitCommit",
+        "version",
+        "author"
+      ],
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "branchName": {
+          "type": "string"
+        },
+        "buildDate": {
+          "type": "string"
+        },
+        "gitCommit": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "required": [
+        "tokenId"
+      ],
+      "properties": {
+        "avatarId": {
+          "type": "string"
+        },
+        "groupId": {
+          "type": "string"
+        },
+        "isChild": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "tokenId": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKey": {
+      "type": "apiKey",
+      "name": "api-key",
+      "in": "header"
+    },
+    "Basic": {
+      "type": "basic"
+    }
+  },
+  "security": [
+    {
+      "ApiKey": [],
+      "Basic": []
+    }
+  ]
+}
