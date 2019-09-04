@@ -1,5 +1,6 @@
 
-# National Sports Museum - User Data Service
+# User Data Service - Simple CRUD API for Museum Exhibits
+## Uses `go-swagger`, `sqlite` and `gorm`.
 
 
 Assumes a working go1.11.x or later environment.
